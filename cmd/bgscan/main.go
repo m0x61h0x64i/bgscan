@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	tea "charm.land/bubbletea/v2"
 	"github.com/MohsenBg/bgscan/internal/core/config"
@@ -18,13 +19,15 @@ func main() {
 		return
 	}
 
-	coreLogger, err := logger.New("core.log")
+	logDir := filepath.Join(os.Getenv("HOME"), "bgscan", "logs")
+
+	coreLogger, err := logger.New("core.log", logger.WithDir(logDir))
 	if err != nil || coreLogger == nil {
 		fmt.Fprintf(os.Stderr, "warning: log files unavailable: %v\n", err)
 		coreLogger = logger.Discard()
 	}
 
-	uiLogger, err := logger.New("ui.log")
+	uiLogger, err := logger.New("ui.log", logger.WithDir(logDir))
 	if err != nil || uiLogger == nil {
 		fmt.Fprintf(os.Stderr, "warning: log files unavailable: %v\n", err)
 		uiLogger = logger.Discard()
