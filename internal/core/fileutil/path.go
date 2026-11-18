@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
 
@@ -97,6 +98,14 @@ func RenameFile(oldPath, newPath string) error {
 }
 
 func BasePath() (string, error) {
+	if runtime.GOOS == "android" {
+		home, err := os.UserHomeDir()
+		if err != nil {
+			return "", err
+		}
+		return filepath.Join(home, "bgscan"), nil
+	}
+
 	exe, err := os.Executable()
 	if err != nil {
 		return "", err
